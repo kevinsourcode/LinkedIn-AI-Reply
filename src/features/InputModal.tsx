@@ -1,15 +1,25 @@
 import React from "react"
 import ChatBox from "./ChatBox";
-const InputModal = () => {
+import type { RefObject } from 'react';
+
+interface InputModalProps {
+  handleFocusedElement?: () => void
+}
+
+
+const InputModal: React.FC<InputModalProps> = ({handleFocusedElement}) => {
 
   const [showChatBox, setShowChatBox] = React.useState(false)
   const [inputValue, setInputValue] = React.useState("");
   const [messageSent, setMessageSent] = React.useState("");
+  const [showButton, setShowButton] = React.useState(false);
+  
 
   const handleGenerate = () => {
     setInputValue("")
     setShowChatBox(true)
     setMessageSent(inputValue)
+    setShowButton(true)
   }
 
   const handleInputChange = (event) => {
@@ -28,7 +38,9 @@ const InputModal = () => {
           onChange={handleInputChange}
         />
         <div className="flex justify-end mt-4">
-          <button onClick={handleGenerate} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Generate</button>
+          {!showButton && <button onClick={handleGenerate} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Generate</button>}
+          {showButton && <button onClick={handleFocusedElement} className="rounded-md bg-indigo-600 mr-2 px-3 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Insert</button>}
+          {showButton && <button className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Regenerate</button>}
         </div>
       </div>
     </div>

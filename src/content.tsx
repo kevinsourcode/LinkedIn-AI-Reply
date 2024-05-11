@@ -30,19 +30,17 @@ const PlasmoOverlay = () => {
         focusedElement &&
         focusedElement.ariaLabel &&
         focusedElement.ariaLabel.toLowerCase().includes("message")
-      focusedElementRef.current = focusedElement
       setFocused(isMessageInput)
-    
 
-      // Get position of focused element
       if (isMessageInput) {
         const rect = focusedElement.getBoundingClientRect()
+        focusedElementRef.current = focusedElement
         setButtonPosition({ x: rect.right - 36, y: rect.bottom - 28 }) //need to find values instead of digits
+        console.log(focusedElementRef.current) 
       }
     }
 
     document.addEventListener("focus", handleFocusChange, true)
-    // document.addEventListener("blur", handleFocusChange, true)
 
     return () => {
       document.removeEventListener("focus", handleFocusChange, true)
@@ -52,8 +50,11 @@ const PlasmoOverlay = () => {
 
   const handleFocusedElement = () => {
     console.log('inserting text...')
-    console.log(focusedElementRef)
-    focusedElementRef.current.value = 'Thank you for the opportunity! If you have any more questions or if there\'s anything else I can help you with, feel free to ask.'
+    console.log(focusedElementRef.current)
+    const ptag = focusedElementRef.current.querySelector('p')
+    const element = document.querySelector('.msg-form__placeholder[data-placeholder="Write a message…"]');
+    element.setAttribute('data-placeholder','')
+    ptag.textContent = 'Thank you for the opportunity! If you have any more questions or if there\'s anything else I can help you with, feel free to ask.'
     setShowModal(false);
   }
 
@@ -63,10 +64,12 @@ const PlasmoOverlay = () => {
 
   return (
     <>
-      <div className={`relative top-[${buttonPosition.x}] left-[${buttonPosition.y}]`}>
-        <IconButton handleShowModal={handleShowModal}/>
-        {showModal && <InputModal handleFocusedElement={handleFocusedElement}/>}
+      <div style={{ position: 'absolute', top: `${buttonPosition.y}px`, left: `${buttonPosition.x}px` }}>
+        {focused && <IconButton handleShowModal={handleShowModal} />}
       </div>
+
+
+      {showModal && <InputModal handleFocusedElement={handleFocusedElement}/>}
     </>
 
   )
